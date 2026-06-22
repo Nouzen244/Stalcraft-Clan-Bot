@@ -700,7 +700,7 @@ class ClanBot(commands.Bot):
                         channel = guild.get_channel(report_channel_id)
                         if channel:
                             embed = discord.Embed(
-                                title="⚔️ КВ через {notify_before} минут!",
+                                title=f"⚔️ КВ через {notify_before} минут!",
                                 description=f"**{schedule['name']}**\n"
                                            f"🕐 Время: **{schedule['start_time']} - {schedule['end_time']}**",
                                 color=discord.Color.red(),
@@ -774,9 +774,9 @@ class ClanBot(commands.Bot):
                     SET leave_time = ?, duration_seconds = ?, status = 'interrupted'
                     WHERE guild_id = ? AND user_id = ? AND status = 'active'
                 ''', (now.isoformat(), int(duration), session['guild_id'], int(session_key.split(':')[1])))
-            except:
-                pass
-        
+            except Exception as e:
+                logger.error(f"Ошибка при закрытии голосовой сессии {session_key}: {e}")
+
         if self.db:
             await self.db.commit()
             await self.db.close()
